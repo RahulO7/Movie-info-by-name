@@ -1,7 +1,8 @@
 // import logo from './logo.svg';
 import './App.css';
 import axios from 'axios';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
+import Navbar from './Components/Navbar';
 
 function App() {
   const [movies,setMovies]=useState([])
@@ -10,7 +11,7 @@ function App() {
 
 
   const data = async ()=>{
-    
+
 
     await axios ({
       method: 'GET',
@@ -21,6 +22,10 @@ function App() {
       console.log(res.data)
      
       setMovies(res.data)
+    }).catch((error)=>{
+      console.log(error.data)
+      setMovies(error.data)
+
     })
 
     
@@ -28,25 +33,32 @@ function App() {
 const search =()=>{
   data()
 }
-  useEffect (()=>{
-    data()
+  // useEffect (()=>{
+  //   data()
 
-  },[])
+  // },[])
 
-  return (
-    <div className="App">
-       <input type="text" value={input} onChange = {(e)=>setInput(e.target.value)} />
-      <input type="submit"  onClick={search}/>
+  return (<>
+  <Navbar setInput = {setInput} search={search} input={input}/>
 
 
+{movies.Response === "True"?
+   <div className="App">
+       
 
-      <img src={movies.Poster} alt="" />
-     
-      <h1>{movies.Title}</h1>
-     
-      
+
+
+   <img src={movies.Poster} alt="" />
+  
+   <h1>{movies.Title}</h1>
+  
    
-    </div>
+
+ </div>:movies.Response === "False"?<p>No Data Found</p>:<p>Search any movie</p>
+
+}
+   
+  </>
   );
 }
 
